@@ -18,7 +18,7 @@ const schemaUsuario = joi.object({
         'string.base': 'O campo senha precisa ser do tipo alfanumérico',
         'string.max': 'Não exceder 150 caracteres para o campo senha',
         'any.required': 'O campo senha é obrigatório',
-        'sting.empty': 'O campo senha é obrigatório'
+        'string.empty': 'O campo senha é obrigatório'
     })
 })
 
