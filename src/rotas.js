@@ -6,6 +6,8 @@ const { validarCorpoRequisicao } = require("./intermediarios/validarCorpoRequisi
 const { verificarUsuarioLogado } = require("./intermediarios/autenticador")
 const { cadastrarProduto } = require("./controladores/produtos")
 const { schemaProduto } = require("./Schemas/produtos")
+const { schemaCliente } = require("./Schemas/clientes")
+const { cadastrarCliente } = require("./controladores/clientes")
 const rotas = Router()
 
 rotas.get("/categoria", listarCategorias)
@@ -15,5 +17,6 @@ rotas.use(verificarUsuarioLogado)
 rotas.get("/usuario", detalharUsuario)
 rotas.put("/usuario", validarCorpoRequisicao(schemaUsuario), atualizarUsuario)
 rotas.post("/produto", validarCorpoRequisicao(schemaProduto), cadastrarProduto)
+rotas.post("/cliente", validarCorpoRequisicao(schemaCliente), cadastrarCliente)
 
 module.exports = rotas
