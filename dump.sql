@@ -22,3 +22,24 @@ insert into categorias (descricao) values
 ('Moda'),
 ('Bebê'),
 ('Games');
+
+create table produtos (
+  id serial primary key,
+  descricao text not null,
+  quantidade_estoque decimal,
+  valor integer,
+  categoria_id integer references categorias(id)
+);
+
+create table clientes (
+  id serial primary key,
+  nome varchar(100),
+  email varchar(100) unique,
+  cpf char(11) unique,
+  cep char(8),
+  rua varchar(100),
+  numero varchar(10),
+  bairro varchar (100),
+  cidade varchar (100),
+  estado char(2)
+);
