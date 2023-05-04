@@ -2,6 +2,7 @@ const knex = require("../banco_dados/conexao")
 
 async function cadastrarProduto(req, res) {
     const { descricao, quantidade_estoque, valor, categoria_id } = req.body
+
     const produto = {
         descricao,
         quantidade_estoque,
@@ -23,4 +24,43 @@ async function cadastrarProduto(req, res) {
     }
 }
 
-module.exports = { cadastrarProduto }
+async function listarProduto(req, res) {
+    try {
+        const { categoria_id } = req.query;
+        let produtos;
+
+        if (categoria_id) {
+            produtos = await knex('produtos').where('categoria_id', categoria_id);
+        } else {
+            produtos = await knex('produtos');
+        }
+
+        return res.status(200).json(produtos);
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ "Mensagem": "Erro interno do Servidor" });
+    }
+}
+
+async function detalharProduto(req, res) {
+    const { id } = req.params
+    if (Number.isInteger(Number(id))) {
+        try {
+            const produto = await knex("produtos").where("id", id).first()
+            if (!produto) {
+                return res.status(404).json({ "mensagem": "O produto informado não existe" })
+            }
+            return res.status(200).json(produto)
+        } catch (error) {
+            console.log(error.message);
+            return res.status(500).json({ "Mensagem": "Erro interno do Servidor" });
+        }
+    }
+    return res.status(404).json({ "mensagem": "O id informado é inválido" })
+}
+
+module.exports = {
+    cadastrarProduto,
+    listarProduto,
+    detalharProduto
+}
