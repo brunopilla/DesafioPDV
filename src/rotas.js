@@ -4,10 +4,10 @@ const { cadastrarUsuario, login, detalharUsuario, atualizarUsuario } = require("
 const { schemaUsuario } = require("./Schemas/usuarios")
 const { validarCorpoRequisicao } = require("./intermediarios/validarCorpoRequisicao")
 const { verificarUsuarioLogado } = require("./intermediarios/autenticador")
-const { cadastrarProduto, listarProduto, detalharProduto } = require("./controladores/produtos")
+const { cadastrarProduto, listarProduto, detalharProduto, atualizarProduto, excluirProduto } = require("./controladores/produtos")
 const { schemaProduto } = require("./Schemas/produtos")
 const { schemaCliente } = require("./Schemas/clientes")
-const { cadastrarCliente, atualizarCliente, detalharCliente } = require("./controladores/clientes")
+const { cadastrarCliente, atualizarCliente, detalharCliente, listarClientes } = require("./controladores/clientes")
 const rotas = Router()
 
 rotas.get("/categoria", listarCategorias)
@@ -17,11 +17,14 @@ rotas.use(verificarUsuarioLogado)
 rotas.get("/usuario", detalharUsuario)
 rotas.put("/usuario", validarCorpoRequisicao(schemaUsuario), atualizarUsuario)
 rotas.post("/produto", validarCorpoRequisicao(schemaProduto), cadastrarProduto)
+rotas.put("/produto/:id", validarCorpoRequisicao(schemaProduto), atualizarProduto)
 rotas.get("/produto", listarProduto)
 rotas.get("/produto/:id", detalharProduto)
+rotas.delete("/produto/:id", excluirProduto)
 rotas.post("/cliente", validarCorpoRequisicao(schemaCliente), cadastrarCliente)
 rotas.get("/cliente/:id", detalharCliente)
 rotas.put("/cliente/:id", validarCorpoRequisicao(schemaCliente), atualizarCliente)
+rotas.get("/cliente", listarClientes)
 
 
 module.exports = rotas

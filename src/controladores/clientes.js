@@ -90,8 +90,19 @@ async function detalharCliente(req, res) {
     }
 }
 
+async function listarClientes(req, res) {
+    try {
+        const clientes = await knex('clientes')
+        return res.status(200).json(clientes)
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ mensagem: "Erro interno do Servidor" })
+    }
+}
+
 module.exports = {
     cadastrarCliente,
     detalharCliente,
-    atualizarCliente
+    atualizarCliente,
+    listarClientes
 }

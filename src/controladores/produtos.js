@@ -59,8 +59,52 @@ async function detalharProduto(req, res) {
     return res.status(404).json({ "mensagem": "O id informado é inválido" })
 }
 
+async function atualizarProduto(req, res) {
+    const { id } = req.params
+    const { descricao, quantidade_estoque, valor, categoria_id } = req.body
+    const produto = {
+        descricao,
+        quantidade_estoque,
+        valor,
+        categoria_id
+    }
+    try {
+        const existeProduto = await knex('produtos').where('id', id).first()
+        if (!existeProduto) {
+            return res.status(400).json({ "mensagem": "Produto não encontrado" })
+        }
+        const existeCategoria = await knex('categorias').where('id', categoria_id).first()
+        if (!existeCategoria) {
+            return res.status(400).json({ message: "Categoria inválida!" })
+        }
+
+        await knex("produtos").update(produto)
+        return res.status(201).json({ mensagem: "Produto atualizado com sucesso!" })
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ mensagem: "Erro interno do Servidor" })
+    }
+}
+
+async function excluirProduto(req, res) {
+    const { id } = req.params
+    try {
+        const existeProduto = await knex('produtos').where('id', id).first()
+        if (!existeProduto) {
+            return res.status(400).json({ "mensagem": "Produto não encontrado" })
+        }
+        await knex('produtos').where('id', id).del()
+        return res.status(200).json({ "mensagem": "Produto excluido com sucesso!" })
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ mensagem: "Erro interno do Servidor" })
+    }
+}
+
 module.exports = {
     cadastrarProduto,
     listarProduto,
-    detalharProduto
+    detalharProduto,
+    atualizarProduto,
+    excluirProduto
 }
