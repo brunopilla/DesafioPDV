@@ -36,6 +36,9 @@ async function cadastrarCliente(req, res) {
 async function atualizarCliente(req, res) {
     const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } = req.body
     const { id } = req.params
+    if (!id || isNaN(parseInt(id))) {
+        return res.status(400).json({ message: "O parâmetro 'id' deve ser um número válido" });
+    }
     const cliente = {
         nome,
         email,
