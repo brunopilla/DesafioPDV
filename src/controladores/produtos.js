@@ -43,7 +43,7 @@ async function listarProduto(req, res) {
 }
 
 async function detalharProduto(req, res) {
-    const { id } = req.params
+    const id = req.params.id
     if (!Number.isInteger(Number(id))) {
         return res.status(404).json({ mensagem: "O parâmetro 'id' deve ser um número válido" })
     }
@@ -92,7 +92,7 @@ async function atualizarProduto(req, res) {
 async function excluirProduto(req, res) {
     const { id } = req.params
     if (!Number.isInteger(Number(id))) {
-        return res.status(404).json({ "mensagem": "O id informado é inválido" })
+        return res.status(404).json({ mensagem: "O parâmetro 'id' deve ser um número válido" })
     }
     try {
         const existeProduto = await knex('produtos').where('id', id).first()

@@ -35,8 +35,8 @@ async function cadastrarCliente(req, res) {
 
 async function atualizarCliente(req, res) {
     const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } = req.body
-    const { id } = req.params
-    if (!id || isNaN(parseInt(id))) {
+    const id = req.params.id
+    if (isNaN(parseInt(id))) {
         return res.status(400).json({ mensagem: "O parâmetro 'id' deve ser um número válido" });
     }
     const cliente = {
@@ -52,6 +52,11 @@ async function atualizarCliente(req, res) {
     }
 
     try {
+        const ExisteCliente = await knex('clientes').where('id', email).first()
+        if (!ExisteCliente) {
+            return res.status(400).json({ mensagem: "Não existe cliente para o ID informado" })
+        }
+
         const jaExisteEmail = await knex('clientes').where('email', email).andWhere('id', '<>', id).first()
         if (jaExisteEmail) {
             return res.status(400).json({ mensagem: "Já existe cliente cadastrado com o e-mail informado." })
@@ -74,14 +79,14 @@ async function detalharCliente(req, res) {
     try {
         const { id } = req.params;
 
-        if (!id || isNaN(parseInt(id))) {
+        if (isNaN(parseInt(id))) {
             return res.status(400).json({ mensagem: "O parâmetro 'id' deve ser um número válido" });
         }
 
         const cliente = await knex('clientes').where('id', id).first();
 
         if (!cliente) {
-            return res.status(404).json({ message: "Não existe cliente para o ID informado" });
+            return res.status(404).json({ mensagem: "Não existe cliente para o ID informado" });
         }
 
         return res.status(200).json(cliente);
