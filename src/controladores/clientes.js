@@ -52,7 +52,7 @@ async function atualizarCliente(req, res) {
     }
 
     try {
-        const ExisteCliente = await knex('clientes').where('id', email).first()
+        const ExisteCliente = await knex('clientes').where('id', id).first()
         if (!ExisteCliente) {
             return res.status(400).json({ mensagem: "Não existe cliente para o ID informado" })
         }
