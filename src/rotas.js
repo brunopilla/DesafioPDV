@@ -8,11 +8,12 @@ const { cadastrarProduto, listarProduto, detalharProduto, atualizarProduto, excl
 const { schemaProduto } = require("./Schemas/produtos")
 const { schemaCliente } = require("./Schemas/clientes")
 const { cadastrarCliente, atualizarCliente, detalharCliente, listarClientes } = require("./controladores/clientes")
+const { schemaLogin } = require("./Schemas/login")
 const rotas = Router()
 
 rotas.get("/categoria", listarCategorias)
 rotas.post("/usuario", validarCorpoRequisicao(schemaUsuario), cadastrarUsuario)
-rotas.post("/login", login)
+rotas.post("/login", validarCorpoRequisicao(schemaLogin), login)
 rotas.use(verificarUsuarioLogado)
 rotas.get("/usuario", detalharUsuario)
 rotas.put("/usuario", validarCorpoRequisicao(schemaUsuario), atualizarUsuario)

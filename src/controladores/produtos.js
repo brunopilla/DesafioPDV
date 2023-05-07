@@ -44,19 +44,19 @@ async function listarProduto(req, res) {
 
 async function detalharProduto(req, res) {
     const { id } = req.params
-    if (Number.isInteger(Number(id))) {
-        try {
-            const produto = await knex("produtos").where("id", id).first()
-            if (!produto) {
-                return res.status(404).json({ "mensagem": "O produto informado não existe" })
-            }
-            return res.status(200).json(produto)
-        } catch (error) {
-            console.log(error.message);
-            return res.status(500).json({ "Mensagem": "Erro interno do Servidor" });
-        }
+    if (!Number.isInteger(Number(id))) {
+        return res.status(404).json({ mensagem: "O parâmetro 'id' deve ser um número válido" })
     }
-    return res.status(404).json({ "mensagem": "O id informado é inválido" })
+    try {
+        const produto = await knex("produtos").where("id", id).first()
+        if (!produto) {
+            return res.status(404).json({ "mensagem": "O produto informado não existe" })
+        }
+        return res.status(200).json(produto)
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ "Mensagem": "Erro interno do Servidor" });
+    }
 }
 
 async function atualizarProduto(req, res) {
@@ -68,17 +68,20 @@ async function atualizarProduto(req, res) {
         valor,
         categoria_id
     }
+    if (!Number.isInteger(Number(id))) {
+        return res.status(404).json({ mensagem: "O parâmetro 'id' deve ser um número válido" })
+    }
     try {
         const existeProduto = await knex('produtos').where('id', id).first()
         if (!existeProduto) {
-            return res.status(400).json({ "mensagem": "Produto não encontrado" })
+            return res.status(400).json({ mensagem: "O parâmetro 'id' deve ser um número válido" })
         }
         const existeCategoria = await knex('categorias').where('id', categoria_id).first()
         if (!existeCategoria) {
             return res.status(400).json({ message: "Categoria inválida!" })
         }
 
-        await knex("produtos").update(produto)
+        await knex("produtos").update(produto).where("id", id)
         return res.status(201).json({ mensagem: "Produto atualizado com sucesso!" })
     } catch (error) {
         console.log(error.message);
@@ -88,10 +91,13 @@ async function atualizarProduto(req, res) {
 
 async function excluirProduto(req, res) {
     const { id } = req.params
+    if (!Number.isInteger(Number(id))) {
+        return res.status(404).json({ "mensagem": "O id informado é inválido" })
+    }
     try {
         const existeProduto = await knex('produtos').where('id', id).first()
         if (!existeProduto) {
-            return res.status(400).json({ "mensagem": "Produto não encontrado" })
+            return res.status(400).json({ "mensagem": "O produto informado não existe" })
         }
         await knex('produtos').where('id', id).del()
         return res.status(200).json({ "mensagem": "Produto excluido com sucesso!" })

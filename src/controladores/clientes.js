@@ -37,7 +37,7 @@ async function atualizarCliente(req, res) {
     const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } = req.body
     const { id } = req.params
     if (!id || isNaN(parseInt(id))) {
-        return res.status(400).json({ message: "O parâmetro 'id' deve ser um número válido" });
+        return res.status(400).json({ mensagem: "O parâmetro 'id' deve ser um número válido" });
     }
     const cliente = {
         nome,
@@ -75,7 +75,7 @@ async function detalharCliente(req, res) {
         const { id } = req.params;
 
         if (!id || isNaN(parseInt(id))) {
-            return res.status(400).json({ message: "O parâmetro 'id' deve ser um número válido" });
+            return res.status(400).json({ mensagem: "O parâmetro 'id' deve ser um número válido" });
         }
 
         const cliente = await knex('clientes').where('id', id).first();

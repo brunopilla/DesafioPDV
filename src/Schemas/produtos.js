@@ -2,7 +2,7 @@ const joi = require('joi')
 
 const schemaProduto = joi.object({
     descricao: joi.string().required().messages({
-        'string.base': 'O campo descrição precisa ser do tipo alfabético',
+        'string.base': 'O campo descrição precisa ser do tipo string',
         'any.required': 'O campo descrição é obrigatório',
         'string.empty': 'O campo descrição é obrigatório'
     }),
