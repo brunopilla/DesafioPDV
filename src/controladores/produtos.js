@@ -29,7 +29,7 @@ async function listarProduto(req, res) {
         const { categoria_id } = req.query;
         let produtos;
 
-        if (categoria_id) {
+        if (categoria_id && Number.isInteger(Number(categoria_id))) {
             produtos = await knex('produtos').where('categoria_id', categoria_id);
         } else {
             produtos = await knex('produtos');
