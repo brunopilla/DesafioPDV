@@ -13,7 +13,7 @@ async function cadastrarProduto(req, res) {
     try {
         const existeCategoria = await knex('categorias').where('id', categoria_id).first()
         if (!existeCategoria) {
-            return res.status(400).json({ message: "Categoria inválida!" })
+            return res.status(400).json({ mensagem: "Categoria inválida!" })
         }
 
         await knex("produtos").insert(produto)
@@ -30,11 +30,11 @@ async function listarProduto(req, res) {
     try {
         if (categoria_id) {
             if (!Number.isInteger(Number(categoria_id))) {
-                return res.status(400).json({ message: "Categoria inválida!" })
+                return res.status(400).json({ mensagem: "O parâmetro 'id_categoria' deve ser um número válido" })
             }
             const existeCategoria = await knex('categorias').where('id', categoria_id).first()
             if (!existeCategoria) {
-                return res.status(400).json({ message: "Categoria inválida!" })
+                return res.status(400).json({ mensagem: "O parâmetro 'id_categoria' deve ser um número válido" })
             }
             produtos = await knex('produtos').where('categoria_id', categoria_id);
         } else {
