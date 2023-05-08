@@ -25,16 +25,21 @@ async function cadastrarProduto(req, res) {
 }
 
 async function listarProduto(req, res) {
+    const { categoria_id } = req.query;
+    let produtos;
     try {
-        const { categoria_id } = req.query;
-        let produtos;
-
-        if (categoria_id && Number.isInteger(Number(categoria_id))) {
+        if (categoria_id) {
+            if (!Number.isInteger(Number(categoria_id))) {
+                return res.status(400).json({ message: "Categoria inválida!" })
+            }
+            const existeCategoria = await knex('categorias').where('id', categoria_id).first()
+            if (!existeCategoria) {
+                return res.status(400).json({ message: "Categoria inválida!" })
+            }
             produtos = await knex('produtos').where('categoria_id', categoria_id);
         } else {
             produtos = await knex('produtos');
         }
-
         return res.status(200).json(produtos);
     } catch (error) {
         console.log(error.message);
