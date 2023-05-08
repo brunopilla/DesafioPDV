@@ -30,11 +30,11 @@ async function listarProduto(req, res) {
     try {
         if (categoria_id) {
             if (!Number.isInteger(Number(categoria_id))) {
-                return res.status(400).json({ mensagem: "O parâmetro 'id_categoria' deve ser um número válido" })
+                return res.status(400).json({ mensagem: "O parâmetro 'id_categoria' deve ser um número" })
             }
             const existeCategoria = await knex('categorias').where('id', categoria_id).first()
             if (!existeCategoria) {
-                return res.status(400).json({ mensagem: "O parâmetro 'id_categoria' deve ser um número válido" })
+                return res.status(400).json({ mensagem: "A categoria informada não está cadastrada" })
             }
             produtos = await knex('produtos').where('categoria_id', categoria_id);
         } else {
