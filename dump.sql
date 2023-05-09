@@ -43,3 +43,18 @@ create table clientes (
   cidade varchar (100),
   estado char(2)
 );
+
+create table pedidos(
+id serial primary key,
+cliente_id integer references clientes(id),
+observacao text,
+valor_total integer not null
+);
+
+create table pedido_produtos(
+id serial primary key,
+pedido_id integer references pedidos(id),
+produto_id integer references produtos(id),
+quantidade_produto decimal not null,
+valor_produto integer not null
+);
