@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body {
+            background-color: var(--cor1);
+            font-family: var(--fontePadrao);
+        }
+
+        header {
+            background-image: linear-gradient(to bottom, var(--cor3), var(--cor5));
+            font-family: var(--fontePadrao);
+            min-height: 100px;
+            text-align: center;
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        header>h1 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 2em;
+            max-width: 1000px;
+            margin: auto;
+            padding-left: 10px;
+            padding-right: 10px;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.507);
+        }
+
+        main {
+            background-color: white;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            padding: 20px;
+            min-width: 300px;
+            max-width: 1000px;
+            margin: auto;
+            margin-bottom: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.521);
+        }
+
+        main p {
+            margin: 15px 0px;
+            text-align: justify;
+            text-indent: 30px;
+            line-height: 2em;
+            font-size: 1.05em;
+        }
+
+        main h1 {
+            color: var(--cor5);
+            background-image: linear-gradient(to right, var(--cor3), transparent);
+            padding: 10px;
+        }
+
+        footer {
+            background-color: var(--cor2);
+            text-align: center;
+            color: white;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <p>
+            PDV Cubos
+        </p>
+    </header>
+    <main>
+        <h1>Olá {{cliente}}, tudo bem?</h1>
+        <h2> Obrigado por sua compra!</h2>
+        <p>
+            Você realizou o pedido nº {{idPedido}} em nossa loja no valor de R$ {{valor}}.
+        </p>
+        <aside>
+            Esta é uma mensagem automática, favor não responder!
+        </aside>
+
+    </main>
+    <footer>
+        <p>
+            Bruno Pilla, Erick Gonçalves, José Carlos, Julio Matias
+        </p>
+    </footer>
+</body>
+
+</html>
