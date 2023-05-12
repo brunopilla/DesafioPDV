@@ -56,7 +56,7 @@ async function cadastrarPedido(req, res) {
         const html = await compilarHtml("./src/email/template.html", {
             cliente: cliente.nome,
             idPedido: pedido_id[0].id,
-            valor: valor_total
+            valor: (valor_total / 100).toFixed(2)
         })
 
         transporter.sendMail({
