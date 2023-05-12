@@ -6,7 +6,7 @@ const schemaProduto = joi.object({
         'any.required': 'O campo descrição é obrigatório',
         'string.empty': 'O campo descrição é obrigatório'
     }),
-    quantidade_estoque: joi.number().min(0, 01).required().messages({
+    quantidade_estoque: joi.number().min(0.01).required().messages({
         'number.base': 'O campo quantidade precisa ser do tipo numérico',
         'number.min': 'Informar número maior que zero no campo quantidade_estoque',
         'any.required': 'O campo quantidade é obrigatório',
