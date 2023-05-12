@@ -63,7 +63,9 @@ async function cadastrarPedido(req, res) {
             from: `${process.env.EMAIL_NAME} <${process.env.EMAIL_FROM}>`,
             to: `${cliente.nome} <${cliente.email}>`,
             subject: `Pedido ${pedido_id[0].id} Realizado`,
-            html
+            text: `Olá ${cliente.nome}, tudo bem? 
+            Você realizou o pedido nº ${pedido_id[0].id} em nossa loja no valor de R$ ${(valor_total / 100).toFixed(2)}. 
+            Obrigado por sua compra!`
         })
 
         return res.status(201).json({ mensagem: "Pedido cadastrado com sucesso!" })
