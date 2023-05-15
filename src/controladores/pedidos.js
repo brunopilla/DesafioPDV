@@ -64,7 +64,7 @@ async function cadastrarPedido(req, res) {
             to: `${cliente.nome} <${cliente.email}>`,
             subject: `Pedido ${pedido_id[0].id} Realizado`,
             html
-        }).promisse()
+        }).promise()
 
         return res.status(201).json({ mensagem: "Pedido cadastrado com sucesso!" })
     } catch (error) {
