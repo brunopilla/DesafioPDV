@@ -6,11 +6,8 @@ let transporter = nodemailer.createTransport({
     secure: true,
     auth: {
         user: process.env.EMAIL_USER,
-        pass: "pass",
-    },
-    tls: {
-        rejectUnauthorized: false,
-    },
+        pass: process.env.EMAIL_PASS,
+    }
 })
 
 module.exports = transporter
