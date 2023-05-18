@@ -37,7 +37,7 @@ async function login(req, res) {
         if (!senhaCorreta) {
             return res.status(404).json({ mensagem: "Usuário e/ou senha inválido(s)." })
         }
-        const token = jwt.sign({ id: usuario.id }, process.env.JWT_PASSWORD, { expiresIn: '8h' })
+        const token = jwt.sign({ id: usuario.id }, process.env.SENHA_JWT, { expiresIn: '8h' })
         const { senha: _, ...usuarioLogado } = usuario
         return res.status(200).json({ usuario: usuarioLogado, token })
     } catch (error) {

@@ -9,8 +9,10 @@ const { schemaProduto } = require("./Schemas/produtos")
 const { schemaCliente } = require("./Schemas/clientes")
 const { cadastrarCliente, atualizarCliente, detalharCliente, listarClientes } = require("./controladores/clientes")
 const { schemaLogin } = require("./Schemas/login")
-const { cadastrarPedido } = require("./controladores/pedidos")
+const { cadastrarPedido, listarPedidos } = require("./controladores/pedidos")
 const { schemaPedido } = require("./Schemas/pedidos")
+const { uploadImagem, listarImagens } = require("./controladores/imagem")
+const multer = require("./multer")
 const rotas = Router()
 
 rotas.get("/categoria", listarCategorias)
@@ -29,6 +31,9 @@ rotas.get("/cliente/:id", detalharCliente)
 rotas.put("/cliente/:id", validarCorpoRequisicao(schemaCliente), atualizarCliente)
 rotas.get("/cliente", listarClientes)
 rotas.post("/pedido", validarCorpoRequisicao(schemaPedido), cadastrarPedido)
+rotas.get("/pedido", listarPedidos)
+rotas.post("/arquivo/upload", multer.single('imagem'), uploadImagem)
+rotas.get("/arquivo", listarImagens)
 
 
 module.exports = rotas

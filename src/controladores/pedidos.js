@@ -73,6 +73,51 @@ async function cadastrarPedido(req, res) {
     }
 }
 
+async function listarPedidos(req, res) {
+    try {
+        const { cliente_id } = req.query;
+
+        let query = knex('pedidos')
+            .select('pedidos.id', 'pedidos.valor_total', 'pedidos.observacao', 'pedidos.cliente_id')
+            .leftJoin('pedido_produtos', 'pedidos.id', 'pedido_produtos.pedido_id')
+            .select('pedido_produtos.id', 'pedido_produtos.quantidade_produto', 'pedido_produtos.valor_produto', 'pedido_produtos.pedido_id', 'pedido_produtos.produto_id');
+
+        if (cliente_id) {
+            query = query.where('pedidos.cliente_id', cliente_id);
+        }
+
+        const pedidos = await query;
+
+        if (pedidos.length === 0) {
+            return res.status(404).json({ mensagem: "Não existem pedidos para o cliente_id informado" });
+        }
+
+        const resultado = [];
+        for (const pedido of pedidos) {
+            const pedidoExistente = resultado.find((item) => item.pedido.id === pedido.id);
+            if (pedidoExistente) {
+                pedidoExistente.pedido_produtos.push(pedido);
+            } else {
+                resultado.push({
+                    pedido: {
+                        id: pedido.id,
+                        valor_total: pedido.valor_total,
+                        observacao: pedido.observacao,
+                        cliente_id: pedido.cliente_id
+                    },
+                    pedido_produtos: [pedido]
+                });
+            }
+        }
+
+        return res.status(200).json(resultado);
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ mensagem: "Erro interno do Servidor" });
+    }
+}
+
 module.exports = {
-    cadastrarPedido
+    cadastrarPedido,
+    listarPedidos
 }

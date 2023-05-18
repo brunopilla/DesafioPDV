@@ -10,7 +10,7 @@ async function verificarUsuarioLogado(req, res, next) {
     }
     const token = authorization.split(' ')[1]
     try {
-        const { id } = jwt.verify(token, process.env.JWT_PASSWORD)
+        const { id } = jwt.verify(token, process.env.SENHA_JWT)
         const usuario = await knex('usuarios').where('id', id).first()
         if (!usuario) {
             return res.status(401).json({ mensagem: "É necessário informar um token válido para acessar este recurso." })

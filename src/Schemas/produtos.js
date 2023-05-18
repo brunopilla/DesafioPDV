@@ -22,6 +22,9 @@ const schemaProduto = joi.object({
         'number.base': 'O campo categoria_id precisa ser do tipo numérico',
         'any.required': 'O campo categoria_id é obrigatório',
         'number.empty': 'O campo categoria_id é obrigatório'
+    }),
+    produto_imagem: joi.string().messages({
+        'string.base': 'O campo produto_imagem precisa ser uma URL do tipo string',
     })
 })
 

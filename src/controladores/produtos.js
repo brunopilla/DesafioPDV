@@ -1,13 +1,16 @@
 const knex = require("../banco_dados/conexao")
+const { excluirImagem } = require("../storage")
+const { uploadImagem } = require("./imagem")
 
 async function cadastrarProduto(req, res) {
-    const { descricao, quantidade_estoque, valor, categoria_id } = req.body
+    const { descricao, quantidade_estoque, valor, categoria_id, produto_imagem } = req.body
 
     const produto = {
         descricao,
         quantidade_estoque,
         valor,
-        categoria_id
+        categoria_id,
+        produto_imagem
     }
 
     try {
@@ -66,26 +69,29 @@ async function detalharProduto(req, res) {
 
 async function atualizarProduto(req, res) {
     const { id } = req.params
-    const { descricao, quantidade_estoque, valor, categoria_id } = req.body
+    const { descricao, quantidade_estoque, valor, categoria_id, produto_imagem } = req.body
     const produto = {
         descricao,
         quantidade_estoque,
         valor,
-        categoria_id
+        categoria_id,
+        produto_imagem
     }
     if (!Number.isInteger(Number(id))) {
         return res.status(404).json({ mensagem: "O parâmetro 'id' deve ser um número válido" })
     }
     try {
-        const existeProduto = await knex('produtos').where('id', id).first()
-        if (!existeProduto) {
-            return res.status(400).json({ mensagem: "O parâmetro 'id' deve ser um número válido" })
+        const produto = await knex('produtos').where('id', id).first()
+        if (!produto) {
+            return res.status(400).json({ mensagem: "Poduto não encontrado!" })
         }
         const existeCategoria = await knex('categorias').where('id', categoria_id).first()
         if (!existeCategoria) {
             return res.status(400).json({ message: "Categoria inválida!" })
         }
-
+        if (produto.produto_imagem && produto.produto_imagem !== produto_imagem) {
+            excluirImagem(produto.produto_imagem)
+        }
         await knex("produtos").update(produto).where("id", id)
         return res.status(201).json({ mensagem: "Produto atualizado com sucesso!" })
     } catch (error) {
@@ -103,6 +109,13 @@ async function excluirProduto(req, res) {
         const existeProduto = await knex('produtos').where('id', id).first()
         if (!existeProduto) {
             return res.status(400).json({ "mensagem": "O produto informado não existe" })
+        }
+        const existePedido = await knex('pedido_produtos').where('produto_id', id).first()
+        if (existePedido) {
+            return res.status(400).json({ "mensagem": "O produto informado não pode ser excluído pois encontra-se atrelado a um ou vários pedidos" })
+        }
+        if (existeProduto.produto_imagem) {
+            await excluirImagem(existeProduto.produto_imagem)
         }
         await knex('produtos').where('id', id).del()
         return res.status(200).json({ "mensagem": "Produto excluido com sucesso!" })
