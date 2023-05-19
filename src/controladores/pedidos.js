@@ -74,48 +74,80 @@ async function cadastrarPedido(req, res) {
 }
 
 async function listarPedidos(req, res) {
+    const { cliente_id } = req.query;
+    let pedidos = []
+    let pedido_produtos = []
+    let retorno = []
     try {
-        const { cliente_id } = req.query;
-
-        let query = knex('pedidos')
-            .select('pedidos.id', 'pedidos.valor_total', 'pedidos.observacao', 'pedidos.cliente_id')
-            .leftJoin('pedido_produtos', 'pedidos.id', 'pedido_produtos.pedido_id')
-            .select('pedido_produtos.id', 'pedido_produtos.quantidade_produto', 'pedido_produtos.valor_produto', 'pedido_produtos.pedido_id', 'pedido_produtos.produto_id');
-
         if (cliente_id) {
-            query = query.where('pedidos.cliente_id', cliente_id);
-        }
-
-        const pedidos = await query;
-
-        if (pedidos.length === 0) {
-            return res.status(404).json({ mensagem: "Não existem pedidos para o cliente_id informado" });
-        }
-
-        const resultado = [];
-        for (const pedido of pedidos) {
-            const pedidoExistente = resultado.find((item) => item.pedido.id === pedido.id);
-            if (pedidoExistente) {
-                pedidoExistente.pedido_produtos.push(pedido);
-            } else {
-                resultado.push({
-                    pedido: {
-                        id: pedido.id,
-                        valor_total: pedido.valor_total,
-                        observacao: pedido.observacao,
-                        cliente_id: pedido.cliente_id
-                    },
-                    pedido_produtos: [pedido]
-                });
+            if (!Number(cliente_id)) {
+                return res.status(400).json({ mensagem: "id_cliente deve ser um número válido!" })
             }
+            const cliente = await knex('clientes').where('id', cliente_id).first()
+            if (!cliente) {
+                return res.status(400).json({ mensagem: "Cliente não encontrado!" })
+            }
+            pedidos = await knex("pedidos").select("id", "valor_total", "observacao", "cliente_id").where("client_id", cliente_id)
+        } else {
+            pedidos = await knex("pedidos").select("id", "valor_total", "observacao", "cliente_id")
         }
+        for (let pedido of pedidos) {
+            pedido_produtos = await knex("pedido_produtos").select("id", "quantidade_produto", "valor_produto", "pedido_id", "produto_id").where("pedido_id", pedido.id)
+            retorno.push({
+                pedido,
+                pedido_produtos
+            })
+        }
+        return res.status(200).json(retorno)
 
-        return res.status(200).json(resultado);
     } catch (error) {
         console.log(error.message);
-        return res.status(500).json({ mensagem: "Erro interno do Servidor" });
+        return res.status(500).json({ mensagem: "Erro interno do Servidor" })
     }
 }
+
+/*try {
+    const { cliente_id } = req.query;
+
+    let query = knex('pedidos')
+        .select('pedidos.id', 'pedidos.valor_total', 'pedidos.observacao', 'pedidos.cliente_id')
+        .leftJoin('pedido_produtos', 'pedidos.id', 'pedido_produtos.pedido_id')
+        .select('pedido_produtos.id', 'pedido_produtos.quantidade_produto', 'pedido_produtos.valor_produto', 'pedido_produtos.pedido_id', 'pedido_produtos.produto_id');
+
+    if (cliente_id) {
+        query = query.where('pedidos.cliente_id', cliente_id);
+    }
+
+    const pedidos = await query;
+
+    if (pedidos.length === 0) {
+        return res.status(404).json({ mensagem: "Não existem pedidos para o cliente_id informado" });
+    }
+
+    const resultado = [];
+    for (const pedido of pedidos) {
+        const pedidoExistente = resultado.find((item) => item.pedido.id === pedido.id);
+        if (pedidoExistente) {
+            pedidoExistente.pedido_produtos.push(pedido);
+        } else {
+            resultado.push({
+                pedido: {
+                    id: pedido.id,
+                    valor_total: pedido.valor_total,
+                    observacao: pedido.observacao,
+                    cliente_id: pedido.cliente_id
+                },
+                pedido_produtos: [pedido]
+            });
+        }
+    }
+
+    return res.status(200).json(resultado);
+} catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ mensagem: "Erro interno do Servidor" });
+}
+}*/
 
 module.exports = {
     cadastrarPedido,

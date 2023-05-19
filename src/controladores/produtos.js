@@ -81,16 +81,16 @@ async function atualizarProduto(req, res) {
         return res.status(404).json({ mensagem: "O parâmetro 'id' deve ser um número válido" })
     }
     try {
-        const produto = await knex('produtos').where('id', id).first()
-        if (!produto) {
+        const existeProduto = await knex('produtos').where('id', id).first()
+        if (!existeProduto) {
             return res.status(400).json({ mensagem: "Poduto não encontrado!" })
         }
         const existeCategoria = await knex('categorias').where('id', categoria_id).first()
         if (!existeCategoria) {
             return res.status(400).json({ message: "Categoria inválida!" })
         }
-        if (produto.produto_imagem && produto.produto_imagem !== produto_imagem) {
-            excluirImagem(produto.produto_imagem)
+        if (existeProduto.produto_imagem && existeProduto.produto_imagem !== produto_imagem) {
+            excluirImagem(existeProduto.produto_imagem)
         }
         await knex("produtos").update(produto).where("id", id)
         return res.status(201).json({ mensagem: "Produto atualizado com sucesso!" })
