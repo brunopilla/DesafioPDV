@@ -90,7 +90,7 @@ async function atualizarProduto(req, res) {
             return res.status(400).json({ message: "Categoria inválida!" })
         }
         if (existeProduto.produto_imagem && existeProduto.produto_imagem !== produto_imagem) {
-            excluirImagem(existeProduto.produto_imagem)
+            excluirImagem(existeProduto.produto_imagem.split(`/${process.env.KEY_NAME}/`)[1])
         }
         await knex("produtos").update(produto).where("id", id)
         return res.status(201).json({ mensagem: "Produto atualizado com sucesso!" })
@@ -115,7 +115,7 @@ async function excluirProduto(req, res) {
             return res.status(400).json({ "mensagem": "O produto informado não pode ser excluído pois encontra-se atrelado a um ou vários pedidos" })
         }
         if (existeProduto.produto_imagem) {
-            await excluirImagem(existeProduto.produto_imagem)
+            await excluirImagem(existeProduto.produto_imagem.split(`/${process.env.KEY_NAME}/`)[1])
         }
         await knex('produtos').where('id', id).del()
         return res.status(200).json({ "mensagem": "Produto excluido com sucesso!" })
