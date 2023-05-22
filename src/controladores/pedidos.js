@@ -87,7 +87,7 @@ async function listarPedidos(req, res) {
             if (!cliente) {
                 return res.status(400).json({ mensagem: "Cliente não encontrado!" })
             }
-            pedidos = await knex("pedidos").select("id", "valor_total", "observacao", "cliente_id").where("client_id", cliente_id)
+            pedidos = await knex("pedidos").select("id", "valor_total", "observacao", "cliente_id").where("cliente_id", cliente_id)
         } else {
             pedidos = await knex("pedidos").select("id", "valor_total", "observacao", "cliente_id")
         }
